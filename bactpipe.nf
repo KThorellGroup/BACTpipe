@@ -84,8 +84,8 @@ workflow {
     SHOVILL(FASTP.out.fastq)
     ASSEMBLY_STATS(SHOVILL.out.contigs)
 
-    prokka_ch = (SHOVILL.out.contigs).join(CLASSIFY_TAXONOMY.out.classification)
-
+    prokka_ch = ((SHOVILL.out.contigs).join(CLASSIFY_TAXONOMY.out.classification), remainder: true)
+	.map {assembly, classification -> tuple(assembly, classification?: [])} //If Kraken2 output is not available, run with empty input
     PROKKA(prokka_ch)
 
     MULTIQC(

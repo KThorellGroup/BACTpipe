@@ -21,7 +21,7 @@ process PROKKA {
 	species = classification[1]
 	gramstain = classification[2]
 
-    prokka_gramstain_argument = ""
+    prokka_gramstain_argument = "Undetermined"
     if( params.prokka_signal_peptides ) {
         if( gramstain == "pos" ) {
             prokka_gramstain_argument = "--gram pos"
