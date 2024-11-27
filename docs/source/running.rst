@@ -39,10 +39,10 @@ your purpose. It is possible to modify several settings for how BACTpipe
 operates using configuration parameters. All changes can be added as
 command-line arguments when running BACTpipe, e.g.::
 
-    $ nextflow run ctmrbio/BACTpipe --shovill_kmers 21,33,55,77 --reads 'path/to/reads/*_{1,2}.fastq.gz'
+    $ nextflow run ctmrbio/BACTpipe --prokka_evalue 1e-24 --reads 'path/to/reads/*_{1,2}.fastq.gz'
 
-The ``--shovill_kmers`` flag will modify the kmer lengths that `shovill`_ will
-use in its SPAdes assembly. The following parameters can be easily configured
+The ``--prokka_evalue`` flag will modify the kmer lengths that `prokka`_ will
+use when blasting for annotation. The following parameters can be easily configured
 from the command line::
 
     Parameter name            Default setting        Description
@@ -51,12 +51,11 @@ from the command line::
     keep_trimmed_fastq        [FALSE]                Output trimmed fastq files from fastp into output_dir
     keep_shovill_output       [FALSE]                Output shovill output directory into output_dir
     kraken2_db                [empty]                Path to Kraken2 database to use for taxonomic classification
-    kraken2_confidence        0.5                    Kraken2 confidence parameter, refer to `kraken2`_ documentation for details
+    kraken2_confidence        0.5                    Kraken2 confidence parameter, refer to `kraken2` documentation for details
     kraken2_min_proportion    1.00                   Minimum proportion of reads on sample level to classify sample as containing species 
-    shovill_depth             100                    See the `shovill`_ documentation for details
-    shovill_kmers             31,33,55,77,99,127
+    shovill_depth             100                    See the `shovill` documentation for details
     shovill_minlen            500
-    prokka_evalue             1e-09                  See the `prokka`_ documentation for details
+    prokka_evalue             1e-09                  See the `prokka` documentation for details
     prokka_kingdom            Bacteria                      
     prokka_reference          [not used]
     prokka_signal_peptides    false    
@@ -67,7 +66,7 @@ from the command line::
 
 To modify any parameter, just add ``--<parameter_name> <new_setting>`` on the
 command line when running BACTpipe, e.g. ``--shovill_depth 75`` to set
-Shovill's depth parameter to 75 instead of 100.  Refer to ``params.config`` in
+`shovill`_'s depth parameter to 75 instead of 100.  Refer to ``params.config`` in
 the ``conf`` directory of the `BACTpipe repository`_ for a complete up-to-date
 listing of all available parameters. 
 
@@ -88,7 +87,6 @@ configuration file that modifies some shovill parameters and leaves all other
 settings to their default values::
 
     shovill_depth: "100"
-    shovill_kmers: "31,33,55,77,99,111,127"
     shovill_minlen: "400"
 
 If you save the above into a plain text file called ``custom_bactpipe_config.yaml`` 
@@ -129,15 +127,22 @@ load a profile. BACTpipe comes with a few pre-installed profiles:
 
 * ``standard`` -- For local use on e.g. a laptop or Linux server. This is the
   default profile used if no profile is explicitly specified.
-* ``rackham`` -- For use on the UPPMAX's Rackham HPC system.
+* ``dardel``-- For use on the PDC `Dardel`_ HPC system. **NOTE**, this profile has to be used together with the ``-with-apptainer`` flag since it is dependent on containerized software.
+* ``docker`` -- For use with docker containers.
+
+.. _Dardel: https://www.pdc.kth.se/hpc-services/computing-systems
+
+And the now deprecated:
+
 * ``ctmr_nas`` -- For local execution on CTMR's old analysis server.
 * ``ctmr_gandalf`` -- For use on CTMR's Gandalf Slurm HPC system.
-* ``docker`` -- For use with docker containers.
+* ``rackham`` -- For use on the UPPMAX's Rackham HPC system.
+
 
 .. sidebar:: Cluster profiles
 
     Note that when running profiles that uses a cluster scheduler, for example
-    like Slurm that is used on UPPMAX systems in the ``rackham`` profile, you
+    like Slurm that is used on the NAISS PDC system in the ``dardel`` profile, you
     also need to provide what Slurm account/project BACTpipe should use when
     submitting jobs. This can be done with ``--project account_name`` on the
     command line, or by adding it to a custom configuration file (see previous
@@ -146,11 +151,11 @@ load a profile. BACTpipe comes with a few pre-installed profiles:
 To run BACTpipe with a specific profile, use the ``-profile <profilename>``
 argument (note the single dash before ``profile``) when running, e.g.::
 
-    $ nextflow run ctmrbio/BACTpipe -profile rackham --project SNIC001 --reads '/proj/projectname/reads/*_{1,2}.fastq.gz'
+    $ nextflow run ctmrbio/BACTpipe -profile dardel --project SNIC001 --reads '/proj/projectname/reads/*_{1,2}.fastq.gz'
 
-This will run BACTpipe using the ``rackham`` profile with the project set to
-``SNIC001``, which automatically configures settings so BACTpipe can find all
-the required software and databases in the UPPMAX HPC cluster environment.
+This will run BACTpipe using the ``dardel`` profile with the project set to
+``SNIC001``, which automatically configures settings so BACTpipe can download
+the required software and databases to the PDC HPC cluster environment.
 Running BACTpipe without a ``-profile`` argument will default to running the
 ``standard`` profile directly on the node you are logged in to (avoid doing
 that on shared HPC systems).
@@ -160,7 +165,7 @@ Custom profile
 --------------
 It is possible to create a custom profile to use instead of the preconfigured
 ones. This is useful if you want to run BACTpipe on another cluster system than
-UPPMAX's Rackham, or if the data you are analyzing requires you to change the
+PDC's Dardel, or if the data you are analyzing requires you to change the
 pre-defined expected CPU, memory, and time requirements for processes on the
 cluster. The best way to start is probably to download one of the pre-existing
 profiles from `conf directory`_ of the `BACTpipe repository`_. 
@@ -168,7 +173,7 @@ profiles from `conf directory`_ of the `BACTpipe repository`_.
 .. _conf directory: https://github.com/ctmrbio/BACTpipe/tree/master/conf
 
 If you are working on a Slurm-managed system, starting with either the
-``rackham.config`` or the ``ctmr_gandalf`` profile would be a good choice, as
+``dardel.config`` or the ``ctmr_gandalf`` profile would be a good choice, as
 both of those are Slurm-managed HPC systems. Download the configuration file
 from the `conf directory`_ of the `BACTpipe repository`_ and modify settings to
 your preference. Then, to run BACTpipe using your custom configuration file,
