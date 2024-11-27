@@ -21,7 +21,7 @@ process PROKKA {
 	species = classification[1]
 	gramstain = classification[2]
 
-    prokka_gramstain_argument = "Undetermined"
+    prokka_gramstain_argument = ""
     if( params.prokka_signal_peptides ) {
         if( gramstain == "pos" ) {
             prokka_gramstain_argument = "--gram pos"
@@ -32,7 +32,7 @@ process PROKKA {
         }
     }
 
-    prokka_genus_argument = ""
+    prokka_genus_argument = "Undetermined"
     if( genus == "Unknown" ) {
         prokka_genus_argument = "--genus Unknown"
     } else if ( genus == "Mixed" ) {
