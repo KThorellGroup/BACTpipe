@@ -90,7 +90,7 @@ workflow {
     } else {
         ch_prokka = SHOVILL.out.contigs.map{
         	id, assembly ->
-        	return tuple( id, assembly, [] ) /If Kraken2 output is not available, run with empty input
+        	return tuple( id, assembly, [] ) /If Kraken2 output is not available, run with empty input}
         }
 
     PROKKA(ch_prokka)
