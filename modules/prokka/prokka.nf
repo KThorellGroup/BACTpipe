@@ -30,7 +30,7 @@ process PROKKA {
     line=\$(cat "$classification")
 
     # Split the line by tabs and assign variables
-    IFS=$'\t' read -r genus species gramstain <<< "\$line"
+    IFS=\$'\t' read -r genus species gramstain <<< "\$line"
 
     # Output the variables for Nextflow
     echo \$genus \$species \$gramstain
