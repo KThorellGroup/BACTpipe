@@ -92,6 +92,9 @@ workflow {
         CLASSIFY_TAXONOMY(FASTP.out.fastq)
         ch_prokka = SHOVILL.out.contigs
           .merge( CLASSIFY_TAXONOMY.out.classification )
+          .map{id, assembly -> 
+          def classification = assembly ?: [] 
+              return tuple(id, assembly, classification) //If Kraken2 output is not available, run with empty input
     }
 
     PROKKA(ch_prokka,
