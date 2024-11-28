@@ -20,7 +20,7 @@ process PROKKA {
 
     if (classification) {
         // Parse the classification file (assumes one line with tab-separated values)
-        def classification_line = classification.text.trim()
+        def classification_line = classification.toFile().text.trim()
         def fields = classification_line.split("\t")
         
         // Assign fields if they exist
