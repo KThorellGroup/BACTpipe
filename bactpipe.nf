@@ -85,15 +85,13 @@ workflow {
     ASSEMBLY_STATS(SHOVILL.out.contigs)
     
     if (params.skip_kraken){
-	    ch_prokka = SHOVILL.out.contigs.map{
-        	id, assembly ->
-        	return tuple( id, assembly, [] ) //If Kraken2 output is not available, run with empty input
+	    ch_prokka = SHOVILL.out.contigs
+	      .map{id, assembly -> return tuple( id, assembly, [] ) //If Kraken2 output is not available, run with empty input
         }
     } else {
         CLASSIFY_TAXONOMY(FASTP.out.fastq)
         ch_prokka = SHOVILL.out.contigs
           .merge( CLASSIFY_TAXONOMY.out.classification )
-    	  .join( remainder: true ) 
     }
 
     PROKKA(ch_prokka,
