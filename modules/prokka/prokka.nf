@@ -5,7 +5,7 @@ process PROKKA {
     publishDir "${params.output_dir}/prokka", mode: 'copy'
 
     input:
-    tuple val(pair_id), path(contigs_file), path(classification, checkIfExists: true)
+    tuple val(pair_id), path(contigs_file), path(classification)
 	path(prokka_reference)
 	val(prokka_signal_peptides)
 	
