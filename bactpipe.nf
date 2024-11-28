@@ -94,8 +94,10 @@ workflow {
         ch_prokka = SHOVILL.out.contigs.join(CLASSIFY_TAXONOMY.out.classification, remainder: true)
     }
 
-    PROKKA(ch_prokka)
-
+    PROKKA(ch_prokka,
+    	params.prokka_reference?file(params.prokka.reference, checkIfExists:true):[], //If prokka reference input, create a file, else create empty list
+		params.prokka_signal_peptides)
+		
     MULTIQC(
         FASTP.out.fastp_reports.collect(),
         PROKKA.out.collect()
