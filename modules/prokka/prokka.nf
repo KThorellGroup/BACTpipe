@@ -19,8 +19,7 @@ process PROKKA {
     def gramstain = ""
 
     if (classification) {
-        // Parse the classification file (assumes one line with tab-separated values)
-        def classification_line = classification.toFile().text.trim()
+        def classification_line = classification.toFile().text.trim() // Read the content of the classification file
         def fields = classification_line.split("\t")
         
         // Assign fields if they exist
