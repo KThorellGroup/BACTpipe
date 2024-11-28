@@ -6,61 +6,53 @@ process PROKKA {
 
     input:
     tuple val(pair_id), path(contigs_file), path(classification)
-	path(prokka_reference)
-	val(prokka_signal_peptides)
-	
+    path(prokka_reference)
+    val(prokka_signal_peptides)
+
     output:
     path("${pair_id}_prokka")
 
     script:
-    prokka_reference_argument = ""
-    if( prokka_reference ) {
-        prokka_reference_argument = "--proteins ${prokka_reference}"
+    // Default values
+    def genus = "Undetermined"
+    def species = "undetermined"
+    def gramstain = ""
+
+    if (classification) {
+        // Parse the classification file (assumes one line with tab-separated values)
+        def classification_line = classification.text.trim()
+        def fields = classification_line.split("\t")
+        
+        // Assign fields if they exist
+        if (fields.size() > 0) genus = fields[0]
+        if (fields.size() > 1) species = fields[1]
+        if (fields.size() > 2) gramstain = fields[2]
     }
-
-	genus = ""
-	species = ""
-	gramstain = ""
-	
-	if (classification) {
-	
-	script:
-    """
-    # Read the input line from the file
-    line=\$(cat "$classification")
-
-    # Split the line by tabs and assign variables
-    IFS=\$'\t' read -r genus species gramstain <<< "\$line"
-
-    # Output the variables for Nextflow
-    echo \$genus \$species \$gramstain
-    """
     
-	}	
-
-    prokka_gramstain_argument = ""
-    if( prokka_signal_peptides ) {
-        if( gramstain == "pos" ) {
+    // Prepare optional arguments for Prokka
+    def prokka_reference_argument = prokka_reference ? "--proteins ${prokka_reference}" : ""
+    
+    def prokka_gramstain_argument = ""
+    if (prokka_signal_peptides) {
+        if (gramstain == "pos") {
             prokka_gramstain_argument = "--gram pos"
-        } else if( gramstain == "neg" ) {
+        } else if (gramstain == "neg") {
             prokka_gramstain_argument = "--gram neg"
-        } else {
-            prokka_gramstain_argument = ""
         }
     }
 
-    prokka_genus_argument = "Undetermined"
-    if( genus == "Unknown" ) {
+    def prokka_genus_argument = ""
+    if (genus == "Unknown") {
         prokka_genus_argument = "--genus Unknown"
-    } else if ( genus == "Mixed" ) {
+    } else if (genus == "Mixed") {
         prokka_genus_argument = "--genus Mixed"
-    } else {
+    } else if (genus != "Undetermined") {
         prokka_genus_argument = "--genus ${genus}"
     }
 
-    prokka_species_argument = "sp."
-    if( species == "unknown" || species == "sp." ) {
-        prokka_species_argument = "--species Unknown"
+    def prokka_species_argument = ""    
+    if( species == "unknown" || species == "ssp." ) {
+        prokka_species_argument = "--species unknown"
     } else {
         prokka_species_argument = "--species ${species}"
     }
@@ -86,6 +78,4 @@ process PROKKA {
     """
     mkdir ${pair_id}_prokka
     """
-
 }
-
