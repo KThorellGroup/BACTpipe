@@ -84,12 +84,19 @@ workflow {
     SHOVILL(FASTP.out.fastq)
     ASSEMBLY_STATS(SHOVILL.out.contigs)
 
+    ch_assembly_metrics = ASSEMBLY_STATS.out.splitCsv(skip: 1)
+        .map { row -> row.join('\t') }
+    ch_mqc_metrics = Channel.value("TODO: header goes here")
+        .concat(ch_metrics)
+        .collectFile( newLine: true, sort: false )
+
     prokka_ch = (SHOVILL.out.contigs).join(CLASSIFY_TAXONOMY.out.classification)
 
     PROKKA(prokka_ch)
 
     MULTIQC(
         FASTP.out.fastp_reports.collect(),
+        ch_mqc_metrics,
         PROKKA.out.collect()
     )
 }

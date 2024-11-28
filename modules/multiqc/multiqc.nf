@@ -4,6 +4,7 @@ process MULTIQC {
 
     input:
     path('*.json')
+    path('assembly_metrics_mqc.tsv')
     path('*_prokka')
 
     output:
