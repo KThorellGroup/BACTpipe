@@ -91,10 +91,11 @@ workflow {
     } else {
         CLASSIFY_TAXONOMY(FASTP.out.fastq)
         ch_prokka = SHOVILL.out.contigs
-          .merge( CLASSIFY_TAXONOMY.out.classification )
-          .map{id, assembly -> 
-          def classification = classification ?: [] 
-              return tuple(id, assembly, classification) //If Kraken2 output is not available, run with empty input
+          .join(CLASSIFY_TAXONOMY.out.classification, remainder: true)
+          .map { id, assembly, classification -> 
+              // Default to an empty list if classification is missing
+              classification = classification ?: []
+              return tuple(id, assembly, classification)
           }
     }
 
