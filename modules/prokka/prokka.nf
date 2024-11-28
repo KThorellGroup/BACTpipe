@@ -23,10 +23,10 @@ process PROKKA {
 	gramstain = ""
 	
 	if (classification) {
-		classification = classification.getText().split("\t")*.trim()
-		genus = classification[0]
-		species = classification[1]
-		gramstain = classification[2]
+		_classification = classification.getText().tokenize("\t")*.trim()
+		genus = _classification[0]
+		species = _classification[1]
+		gramstain = _classification[2]
 	}	
 
     prokka_gramstain_argument = ""
@@ -49,8 +49,8 @@ process PROKKA {
         prokka_genus_argument = "--genus ${genus}"
     }
 
-    prokka_species_argument = ""
-    if( species == "unknown" || species == "spp." ) {
+    prokka_species_argument = "sp."
+    if( species == "unknown" || species == "sp." ) {
         prokka_species_argument = "--species Unknown"
     } else {
         prokka_species_argument = "--species ${species}"
