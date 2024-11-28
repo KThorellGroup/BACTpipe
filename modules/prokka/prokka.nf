@@ -23,10 +23,19 @@ process PROKKA {
 	gramstain = ""
 	
 	if (classification) {
-		_classification = classification.getText().tokenize("\t")*.trim()
-		genus = _classification[0]
-		species = _classification[1]
-		gramstain = _classification[2]
+	
+	script:
+    """
+    # Read the input line from the file
+    line=\$(cat "$classification")
+
+    # Split the line by tabs and assign variables
+    IFS=$'\t' read -r genus species gramstain <<< "\$line"
+
+    # Output the variables for Nextflow
+    echo \$genus \$species \$gramstain
+    """
+    
 	}	
 
     prokka_gramstain_argument = ""
