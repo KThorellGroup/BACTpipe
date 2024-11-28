@@ -4,10 +4,10 @@ process ASSEMBLY_STATS {
     publishDir "${params.output_dir}/shovill", mode: 'copy'
 
     input:
-    tuple val(pair_id), file("${pair_id}.contigs.fa")
+    tuple val(pair_id), path("${pair_id}.contigs.fa")
 
     output:
-    file("${pair_id}.assembly_stats.txt")
+    path("${pair_id}.assembly_stats.txt")
 
     script:
     """
