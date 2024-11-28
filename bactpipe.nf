@@ -81,17 +81,19 @@ fastp_input
 workflow {
     FASTP(fastp_input)
     
-    ch_classify_taxonomy = Channel.empty()
-    if (!params.skip_kraken){
-	CLASSIFY_TAXONOMY(FASTP.out.fastq)
-        ch_classify_taxonomy = CLASSIFY_TAXONOMY.out.classification
-    }
-
     SHOVILL(FASTP.out.fastq)
     ASSEMBLY_STATS(SHOVILL.out.contigs)
+    
+    if (!params.skip_kraken){
+	    CLASSIFY_TAXONOMY(FASTP.out.fastq)
+        ch_prokka = SHOVILL.out.contigs.join(CLASSIFY_TAXONOMY.out.classification, remainder: true)
+    } else {
+        ch_prokka = SHOVILL.out.contigs.map{
+        	id, assembly ->
+        	return tuple( id, assembly, [] ) /If Kraken2 output is not available, run with empty input
+        }
+    }
 
-    ch_prokka = SHOVILL.out.contigs.join(ch_classify_taxonomy, remainder: true)
-	.map {assembly, classification -> tuple(assembly, classification?: [])} //If Kraken2 output is not available, run with empty input
     PROKKA(ch_prokka)
 
     MULTIQC(
