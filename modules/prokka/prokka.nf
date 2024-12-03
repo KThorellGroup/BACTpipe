@@ -19,7 +19,7 @@ process PROKKA {
     def gramstain = ""
 
     if (classification) {
-        def classification_line = classification.toFile().text.trim() // Read the content of the classification file
+        def classification_line = classification.text.trim() // Read the content of the classification file
         def fields = classification_line.split("\t")
         
         // Assign fields if they exist
