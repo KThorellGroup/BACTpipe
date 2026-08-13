@@ -3,7 +3,7 @@ process FASTP {
 
     publishDir "${params.output_dir}/fastp",
         mode: "copy",
-        pattern: "${pair_id}.fastp.json"
+        pattern: "*.fastp.json"
 
     publishDir "${params.output_dir}/fastp",
         mode: "copy",
