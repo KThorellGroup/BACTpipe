@@ -3,11 +3,11 @@ process SHOVILL {
 
     publishDir "${params.output_dir}/shovill",
         mode: 'copy',
-        pattern: "${pair_id}_shovill/*.log"
+        pattern: "*_shovill/*.log"
 
     publishDir "${params.output_dir}/shovill",
         mode: 'copy',
-        pattern: "${pair_id}_shovill/*.{fasta,fastg,fa,gfa,changes,hist,tab}",
+        pattern: "*_shovill/*.{fasta,fastg,fa,gfa,changes,hist,tab}",
         enabled: params.keep_shovill_output
 
     input:
