@@ -1,50 +1,53 @@
-nextflow.enable.dsl = 2
-
 process PROKKA {
-    tag { pair_id }
+    tag "$pair_id"
+
     publishDir "${params.output_dir}/prokka", mode: 'copy'
 
     input:
-    tuple val(pair_id), path(contigs_file), path(classification)
+    tuple val(pair_id), path(contigs_file), path(classification_file)
 
     output:
-    path("${pair_id}_prokka")
+    path "${pair_id}_prokka"
 
     script:
-    prokka_reference_argument = ""
-    if( params.prokka_reference ) {
+    def prokka_reference_argument = ""
+    if (params.prokka_reference) {
         prokka_reference_argument = "--proteins ${params.prokka_reference}"
     }
 
-    classification = file(classification.resolveSymLink()).getText().split("\t")
-	genus = classification[0]
-	species = classification[1]
-	gramstain = classification[2]
+    def classification_data =
+        file(classification_file.resolveSymLink()).getText().split("\t")
 
-    prokka_gramstain_argument = ""
-    if( params.prokka_signal_peptides ) {
-        if( gramstain == "pos" ) {
+    def genus = classification_data[0]
+    def species = classification_data[1]
+    def gramstain = classification_data[2]
+
+    def prokka_gramstain_argument = ""
+    if (params.prokka_signal_peptides) {
+        if (gramstain == "pos") {
             prokka_gramstain_argument = "--gram pos"
-        } else if( gramstain == "neg" ) {
+        }
+        else if (gramstain == "neg") {
             prokka_gramstain_argument = "--gram neg"
-        } else {
-            prokka_gramstain_argument = ""
         }
     }
 
-    prokka_genus_argument = ""
-    if( genus == "Unknown" ) {
+    def prokka_genus_argument
+    if (genus == "Unknown") {
         prokka_genus_argument = "--genus Unknown"
-    } else if ( genus == "Mixed" ) {
+    }
+    else if (genus == "Mixed") {
         prokka_genus_argument = "--genus Mixed"
-    } else {
+    }
+    else {
         prokka_genus_argument = "--genus ${genus}"
     }
 
-    prokka_species_argument = ""
-    if( species == "unknown" || species == "spp." ) {
+    def prokka_species_argument
+    if (species == "unknown" || species == "spp.") {
         prokka_species_argument = "--species Unknown"
-    } else {
+    }
+    else {
         prokka_species_argument = "--species ${species}"
     }
 
@@ -69,6 +72,4 @@ process PROKKA {
     """
     mkdir ${pair_id}_prokka
     """
-
 }
-
