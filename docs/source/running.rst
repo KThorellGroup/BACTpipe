@@ -4,9 +4,9 @@ After installing all the required dependencies and downloading the required
 mash sketches of refseq genomes, it is very easy to run BACTpipe. There are
 several ways to run BACTpipe, but we'll start with the easiest::
 
-    $ nextflow run ctmrbio/BACTpipe --reads 'path/to/reads/*_R{1,2}.fastq.gz'
+    $ nextflow run KThorellGroup/BACTpipe --reads 'path/to/reads/*_R{1,2}.fastq.gz'
 
-This will instruct Nextflow to go to the ``ctmrbio`` Github organization to
+This will instruct Nextflow to go to the ``KThorellGroup`` Github organization to
 download and run the ``BACTpipe`` workflow. The argument ``--reads`` is used to
 tell the workflow which input files you want to run BACTpipe on. Note that the
 path to the reads must be enclosed in single quotes (``'``) to prevent the
@@ -24,7 +24,7 @@ file suffixes).
     to your computer. If BACTpipe is updated after your first run, the 
     subsequent runs will still use the old version that you have downloaded.
     To get the newest version, tell Nextflow to update your local copy:
-    ``nextflow pull ctmrbio/BACTpipe``.
+    ``nextflow pull KThorellGroup/BACTpipe``.
 
 When BACTpipe is run like this, it by default assumes you want to run
 everything locally, on the current machine.  Note that BACTpipe is capable of
@@ -39,7 +39,7 @@ your purpose. It is possible to modify several settings for how BACTpipe
 operates using configuration parameters. All changes can be added as
 command-line arguments when running BACTpipe, e.g.::
 
-    $ nextflow run ctmrbio/BACTpipe --prokka_evalue 1e-24 --reads 'path/to/reads/*_{1,2}.fastq.gz'
+    $ nextflow run KThorellGroup/BACTpipe --prokka_evalue 1e-24 --reads 'path/to/reads/*_{1,2}.fastq.gz'
 
 The ``--prokka_evalue`` flag will modify the kmer lengths that `prokka`_ will
 use when blasting for annotation. The following parameters can be easily configured
@@ -70,7 +70,7 @@ command line when running BACTpipe, e.g. ``--shovill_depth 75`` to set
 the ``conf`` directory of the `BACTpipe repository`_ for a complete up-to-date
 listing of all available parameters. 
 
-.. _BACTpipe repository: https://www.github.com/ctmrbio/BACTpipe
+.. _BACTpipe repository: https://www.github.com/KThorellGroup/BACTpipe
 
 Change many settings at once
 ............................
@@ -93,7 +93,7 @@ If you save the above into a plain text file called ``custom_bactpipe_config.yam
 you can provide it when running BACTpipe using the ``-params-file`` command 
 line argument::
 
-    $ nextflow run ctmrbio/BACTpipe -params-file path/to/your/custom/params.yaml --reads 'path/to/reads/*_{1,2}.fastq.gz'
+    $ nextflow run KThorellGroup/BACTpipe -params-file path/to/your/custom/params.yaml --reads 'path/to/reads/*_{1,2}.fastq.gz'
 
 There is also another way to modify parameters that uses Nextflow's own
 configuration format. This can be useful if you want to modify *a lot* of
@@ -104,9 +104,9 @@ file contains some comments explaining how the different variables work, to
 help out when modifying the settings. To run BACTpipe with a custom
 configuration in the Nextflow format, you use ``-c`` on the command line::
 
-    $ nextflow run ctmrbio/BACTpipe -c path/to/custom_params.config --reads 'path/to/reads/*_{1,2}.fastq.gz'
+    $ nextflow run KThorellGroup/BACTpipe -c path/to/custom_params.config --reads 'path/to/reads/*_{1,2}.fastq.gz'
 
-.. _params.config: https://github.com/ctmrbio/BACTpipe/blob/master/conf/params.config
+.. _params.config: https://github.com/KThorellGroup/BACTpipe/blob/master/conf/params.config
 
 Note:
 ............................
@@ -135,7 +135,7 @@ load a profile. BACTpipe comes with a few pre-installed profiles:
 And the now deprecated:
 
 * ``ctmr_nas`` -- For local execution on CTMR's old analysis server.
-* ``ctmr_gandalf`` -- For use on CTMR's Gandalf Slurm HPC system.
+* ``ctmr_gandalf`` -- For use on CTMR's old Gandalf Slurm HPC system.
 * ``rackham`` -- For use on the UPPMAX's Rackham HPC system.
 
 
@@ -151,7 +151,7 @@ And the now deprecated:
 To run BACTpipe with a specific profile, use the ``-profile <profilename>``
 argument (note the single dash before ``profile``) when running, e.g.::
 
-    $ nextflow run ctmrbio/BACTpipe -profile dardel --project SNIC001 --reads '/proj/projectname/reads/*_{1,2}.fastq.gz'
+    $ nextflow run KThorellGroup/BACTpipe -profile dardel --project SNIC001 --reads '/proj/projectname/reads/*_{1,2}.fastq.gz'
 
 This will run BACTpipe using the ``dardel`` profile with the project set to
 ``SNIC001``, which automatically configures settings so BACTpipe can download
@@ -170,17 +170,17 @@ pre-defined expected CPU, memory, and time requirements for processes on the
 cluster. The best way to start is probably to download one of the pre-existing
 profiles from `conf directory`_ of the `BACTpipe repository`_. 
 
-.. _conf directory: https://github.com/ctmrbio/BACTpipe/tree/master/conf
+.. _conf directory: https://github.com/KThorellGroup/BACTpipe/tree/master/conf
 
-If you are working on a Slurm-managed system, starting with either the
-``dardel.config`` or the ``ctmr_gandalf`` profile would be a good choice, as
-both of those are Slurm-managed HPC systems. Download the configuration file
+If you are working on a Slurm-managed system, starting with the
+``dardel.config`` profile would be a good choice, as
+this is a Slurm-managed HPC system. Download the configuration file
 from the `conf directory`_ of the `BACTpipe repository`_ and modify settings to
 your preference. Then, to run BACTpipe using your custom configuration file,
 you need to tell Nextflow to read parameters from your file instead of the
 default parameters::
 
-    $ nextflow run ctmrbio/BACTpipe -c path/to/your/custom/profile.config --reads 'path/to/reads/*_{1,2}.fastq.gz'
+    $ nextflow run KThorellGroup/BACTpipe -c path/to/your/custom/profile.config --reads 'path/to/reads/*_{1,2}.fastq.gz'
 
 The custom profile is not limited to configuring CPU, memory and time limits
 for the different processes. It is also possible to set parameter values inside
@@ -188,5 +188,3 @@ the custom profile, i.e. to change paths to reference databases or adjust
 runtime parameters for the different processes. It is also possible to just use
 a configuration file that changes settings without modifying how the workflow
 is run, see :ref:`Change many settings at once`.
-
-
