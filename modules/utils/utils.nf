@@ -2,7 +2,7 @@
 def printHelp() {
     log.info """
   Example usage:
-    nextflow run ctmrbio/BACTpipe --reads '*_R{1,2}.fastq.gz'
+    nextflow run KThorellGroup/BACTpipe --reads '*_R{1,2}.fastq.gz'
 
   Mandatory arguments:
     --reads                 Path to input data (must be surrounded with single quotes).
