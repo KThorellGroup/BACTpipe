@@ -36,7 +36,7 @@ BACTpipe is published as open source under the MIT license and you are welcome
 to look at, suggest improvements, or download and improve/contribute to the code
 at the project's `Github repository`_ page.
 
-.. _Github repository: https://github.com/ctmrbio/BACTpipe
+.. _Github repository: https://github.com/KThorellGroup/BACTpipe
 
 
 Contributing
@@ -51,7 +51,7 @@ If you find BACTpipe useful and publish something using BACTpipe, please cite:
 
 | Emilio Rudbeck; Abhinav Sharma; Joseph Kirangwa; Yue Hu; Sandra Álvarez-Carretero; Fredrik Boulund; Kaisa Thorell (2017-2021).
 | BACTpipe: bacterial whole genome sequence assembly and annotation pipeline.
-| https://github.com/ctmrbio/BACTpipe
+| https://github.com/KThorellGroup/BACTpipe
 | DOI: https://doi.org/10.5281/zenodo.4742358
 
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.4742358.svg

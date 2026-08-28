@@ -2,7 +2,7 @@
 def printHelp() {
     log.info """
   Example usage:
-    nextflow run ctmrbio/BACTpipe --reads '*_R{1,2}.fastq.gz'
+    nextflow run KThorellGroup/BACTpipe --reads '*_R{1,2}.fastq.gz'
 
   Mandatory arguments:
     --reads                 Path to input data (must be surrounded with single quotes).
@@ -24,11 +24,12 @@ def printHelp() {
 
 def printSettings() {
     log.info "Running with the following settings:".center(60)
-    for (option in params) {
-        if (option.key in ['cluster-options', 'help', 'profiles_that_require_project']) {
-            continue
+
+    params.each { key, value ->
+        if (!(key in ['clusterOptions', 'help', 'profiles_that_require_project'])) {
+            log.info "${key}: ".padLeft(30) + "${value}"
         }
-        log.info "${option.key}: ".padLeft(30) + "${option.value}"
     }
+
     log.info "".center(60, "=")
 }

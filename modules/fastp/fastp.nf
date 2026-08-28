@@ -1,8 +1,14 @@
-
 process FASTP {
-    tag { pair_id }
-    publishDir "${params.output_dir}/fastp", mode: "copy", pattern: "${pair_id}.fastp.json"
-    publishDir "${params.output_dir}/fastp", mode: "copy", pattern: "*.fastp.fq.gz", enabled: params.keep_trimmed_fastq
+    tag "$pair_id"
+
+    publishDir "${params.output_dir}/fastp",
+        mode: "copy",
+        pattern: "*.fastp.json"
+
+    publishDir "${params.output_dir}/fastp",
+        mode: "copy",
+        pattern: "*.fastp.fq.gz",
+        enabled: params.keep_trimmed_fastq
 
     input:
     tuple val(pair_id), path(reads)
@@ -27,7 +33,6 @@ process FASTP {
     """
     touch ${pair_id}_1.fastp.fq.gz
     touch ${pair_id}_2.fastp.fq.gz
-    
     touch ${pair_id}.fastp.json
     """
 }

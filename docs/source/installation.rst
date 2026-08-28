@@ -7,15 +7,14 @@ Dependencies
 In order to run `BACTpipe`_, you need to have the following programs installed:
 
 - `Java v8+`_ for Nextflow 
-- `Nextflow`_ for workflow management, more specifically `v21.04.0`_
+- `Nextflow`_ for workflow management, more specifically `v26.04.0`_
 - `Conda`_ for installation of workflow tools
 - (Optional) A `Kraken2 database`_ if you want to classify taxonomy and gram
   stain to potentially improve genome annotations in the Prokka step.
 
-.. _BACTpipe: https://github.com/ctmrbio/BACTpipe
+.. _BACTpipe: https://github.com/KThorellGroup/BACTpipe
 .. _Java v8+: https://www.java.com/sv/download/help/download_options.xml
 .. _Nextflow: https://www.nextflow.io/
-.. _v21.04.0: https://github.com/nextflow-io/nextflow/releases/download/v21.04.0/nextflow-21.04.0-all
 .. _Conda: https://docs.conda.io/en/latest/
 .. _Kraken2 database: http://ccb.jhu.edu/software/kraken2/index.shtml?t=downloads
 
